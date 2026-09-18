@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Flame, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { Flame, ArrowUpRight, CheckCircle2, Plus } from 'lucide-react';
 import { useHabits } from '@/context/HabitContext';
 import { getDailyProgress, getTodayKey, formatDateKey, ARABIC_DAY_LETTERS } from '@/utils/date-helpers';
 import SakinahPromoCard from '@/components/sakinah/SakinahPromoCard';
@@ -10,10 +10,14 @@ import ChickWeeklyCard from '@/components/chick/ChickWeeklyCard';
 import { sounds } from '@/utils/sound';
 
 export default function DesktopSummaryPanel() {
-  const { habits, settings } = useHabits();
+  const { habits, settings, setIsAddModalOpen } = useHabits();
   const progress = getDailyProgress(habits);
-  const todayKey = getTodayKey();
   const isChick = Boolean(settings.isChickMode);
+
+  const handleOpenAdd = () => {
+    sounds.playTick();
+    setIsAddModalOpen(true);
+  };
 
   // Weekly mini sparkline
   const today = new Date();
@@ -42,74 +46,99 @@ export default function DesktopSummaryPanel() {
       {/* 1. Chick Weekly Card (if Chick mode is active) */}
       {isChick && <ChickWeeklyCard />}
 
-      {/* 2. Quick Streak & Stats Card */}
-      <div className="bg-card border border-border rounded-3xl p-5 shadow-soft flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-bold text-muted-foreground">
-            {isChick ? 'ملخص شطارتك' : 'ملخص اليوم'}
-          </span>
-          <Link
-            href="/stats"
-            onClick={() => sounds.playTick()}
-            className="text-xs font-bold text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
-          >
-            <span>التفاصيل</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2.5">
-          <div className="bg-secondary rounded-2xl p-3.5 flex flex-col gap-1 border border-border">
-            <div className="flex items-center gap-1.5 text-warning-foreground text-xs font-medium">
-              <Flame className="w-3.5 h-3.5 text-warning" />
-              <span>أعلى سلسلة</span>
+      {/* 2. Quick Streak & Stats Card or Empty State Starter */}
+      {habits.length > 0 ? (
+        <>
+          <div className="bg-card border border-border rounded-3xl p-5 shadow-soft flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-muted-foreground">
+                {isChick ? 'ملخص شطارتك' : 'ملخص اليوم'}
+              </span>
+              <Link
+                href="/stats"
+                onClick={() => sounds.playTick()}
+                className="text-xs font-bold text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
+              >
+                <span>التفاصيل</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </Link>
             </div>
-            <span className="text-xl font-extrabold text-foreground">
-              {progress.longestCurrentStreak} <span className="text-xs font-normal text-muted-foreground">أيام</span>
-            </span>
-          </div>
 
-          <div className="bg-secondary rounded-2xl p-3.5 flex flex-col gap-1 border border-border">
-            <div className="flex items-center gap-1.5 text-success-foreground text-xs font-medium">
-              <CheckCircle2 className="w-3.5 h-3.5 text-success" />
-              <span>المنجز اليوم</span>
-            </div>
-            <span className="text-xl font-extrabold text-foreground">
-              {progress.completed}/{progress.total}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Mini Weekly Trend Sparkline */}
-      <div className="bg-card border border-border rounded-3xl p-5 shadow-soft flex flex-col gap-3">
-        <span className="text-xs font-bold text-muted-foreground">نشاط الأسبوع</span>
-
-        <div className="flex items-end justify-between gap-1.5 h-24 pt-2 px-1">
-          {weekDays.map((day) => {
-            const heightPercent = Math.max(Math.round((day.count / maxDaily) * 100), day.count > 0 ? 15 : 6);
-            return (
-              <div key={day.dateKey} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <div className="w-full max-w-[18px] h-full flex items-end bg-accent rounded-md overflow-hidden p-0.5">
-                  <div
-                    style={{ height: `${heightPercent}%` }}
-                    className={`w-full rounded-sm transition-all duration-300 ${
-                      day.isToday
-                        ? 'bg-primary'
-                        : day.count > 0
-                        ? 'bg-muted-foreground'
-                        : 'bg-transparent'
-                    }`}
-                  />
+            <div className="grid grid-cols-2 gap-2.5">
+              <div className="bg-secondary rounded-2xl p-3.5 flex flex-col gap-1 border border-border">
+                <div className="flex items-center gap-1.5 text-warning-foreground text-xs font-medium">
+                  <Flame className="w-3.5 h-3.5 text-warning" />
+                  <span>أعلى سلسلة</span>
                 </div>
-                <span className={`text-[10px] font-bold ${day.isToday ? 'text-foreground' : 'text-muted-foreground'}`}>
-                  {day.dayLetter}
+                <span className="text-xl font-extrabold text-foreground">
+                  {progress.longestCurrentStreak} <span className="text-xs font-normal text-muted-foreground">أيام</span>
                 </span>
               </div>
-            );
-          })}
+
+              <div className="bg-secondary rounded-2xl p-3.5 flex flex-col gap-1 border border-border">
+                <div className="flex items-center gap-1.5 text-success-foreground text-xs font-medium">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-success" />
+                  <span>المنجز اليوم</span>
+                </div>
+                <span className="text-xl font-extrabold text-foreground">
+                  {progress.completed}/{progress.total}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Mini Weekly Trend Sparkline */}
+          <div className="bg-card border border-border rounded-3xl p-5 shadow-soft flex flex-col gap-3">
+            <span className="text-xs font-bold text-muted-foreground">نشاط الأسبوع</span>
+
+            <div className="flex items-end justify-between gap-1.5 h-24 pt-2 px-1">
+              {weekDays.map((day) => {
+                const heightPercent = Math.max(Math.round((day.count / maxDaily) * 100), day.count > 0 ? 15 : 6);
+                return (
+                  <div key={day.dateKey} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+                    <div className="w-full max-w-[18px] h-full flex items-end bg-accent rounded-md overflow-hidden p-0.5">
+                      <div
+                        style={{ height: `${heightPercent}%` }}
+                        className={`w-full rounded-sm transition-all duration-300 ${
+                          day.isToday
+                            ? 'bg-primary'
+                            : day.count > 0
+                            ? 'bg-muted-foreground'
+                            : 'bg-transparent'
+                        }`}
+                      />
+                    </div>
+                    <span className={`text-[10px] font-bold ${day.isToday ? 'text-foreground' : 'text-muted-foreground'}`}>
+                      {day.dayLetter}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="bg-card border border-border rounded-3xl p-5 shadow-soft flex flex-col gap-3 text-center items-center py-6">
+          <div className="w-12 h-12 rounded-2xl bg-accent flex items-center justify-center text-2xl shadow-inner">
+            🌱
+          </div>
+          <div className="flex flex-col gap-1">
+            <h4 className="text-sm font-extrabold text-foreground">
+              ابدأ رحلتك
+            </h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              أضف أول عادة لتبدأ في تتبع إنجازاتك ونشاطك الأسبوعي.
+            </p>
+          </div>
+          <button
+            onClick={handleOpenAdd}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-soft mt-1"
+          >
+            <Plus className="w-4 h-4 stroke-[2.5]" />
+            <span>أضف عادة</span>
+          </button>
         </div>
-      </div>
+      )}
 
       {/* 4. Cross-Product Ecosystem Card: Sakinah */}
       <div className="flex flex-col gap-2">

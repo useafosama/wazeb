@@ -93,23 +93,28 @@ export default function HomePage() {
         {/* Chick Hero Banner */}
         {settings.isChickMode && <ChickHeroBanner />}
 
-        {/* 1. Progress Ring Card */}
-        <ProgressRingCard />
+        {/* Active Habit Cards (only if user has habits) */}
+        {habits.length > 0 && (
+          <>
+            {/* 1. Progress Ring Card */}
+            <ProgressRingCard />
 
-        {/* 2. Wazeb Day Score */}
-        {habits.length > 0 && <DayScoreCard />}
+            {/* 2. Wazeb Day Score */}
+            <DayScoreCard />
 
-        {/* 3. Featured Badges (أوسمتي المميزة) */}
-        {habits.length > 0 && <FeaturedBadgesSection isHomePage />}
+            {/* 3. Featured Badges (أوسمتي المميزة) */}
+            <FeaturedBadgesSection isHomePage />
 
-        {/* 4. Wazeb Today Quick Action Widget */}
-        {habits.length > 0 && <QuickActionWidget />}
+            {/* 4. Wazeb Today Quick Action Widget */}
+            <QuickActionWidget />
 
-        {/* 5. Active Challenge Card */}
-        {habits.length > 0 && <ActiveChallengeCard />}
+            {/* 5. Active Challenge Card */}
+            <ActiveChallengeCard />
+          </>
+        )}
 
-        {/* 5. Top Smart Insight (if available) */}
-        {topInsight && (
+        {/* Top Smart Insight (if available and habits exist) */}
+        {habits.length > 0 && topInsight && (
           <div className="bg-card border border-border rounded-3xl p-4 sm:p-5 shadow-soft flex flex-col gap-2.5 animate-fade-in">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -149,18 +154,6 @@ export default function HomePage() {
 
       {/* Habits Section */}
       <section className="flex flex-col gap-4 pb-8">
-        <div className="flex items-center justify-between px-1">
-          <h2 className="text-sm sm:text-base font-bold text-muted-foreground tracking-wide">
-            عاداتي اليومية
-          </h2>
-          {habits.length > 0 && (
-            <span className="text-xs font-semibold text-muted-foreground bg-secondary px-3 py-1 rounded-full border border-border">
-              {habits.length} عادات
-            </span>
-          )}
-        </div>
-
-        {/* Habits List or Empty State */}
         {!isHydrated ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {[1, 2, 3, 4].map((i) => (
@@ -173,11 +166,22 @@ export default function HomePage() {
         ) : habits.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-            {habits.map((habit) => (
-              <HabitCard key={habit.id} habit={habit} />
-            ))}
-          </div>
+          <>
+            <div className="flex items-center justify-between px-1">
+              <h2 className="text-sm sm:text-base font-bold text-muted-foreground tracking-wide">
+                عاداتي اليومية
+              </h2>
+              <span className="text-xs font-semibold text-muted-foreground bg-secondary px-3 py-1 rounded-full border border-border">
+                {habits.length} عادات
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+              {habits.map((habit) => (
+                <HabitCard key={habit.id} habit={habit} />
+              ))}
+            </div>
+          </>
         )}
       </section>
 

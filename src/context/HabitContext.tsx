@@ -17,7 +17,6 @@ import {
   Achievement,
   MonthlyReflectionSnapshot,
 } from '@/types/habit';
-import { getSampleHabits } from '@/utils/sample-data';
 import { getTodayKey } from '@/utils/date-helpers';
 import { calculateDayScore } from '@/utils/day-score';
 import { generateOrUpdateChallenges } from '@/utils/challenges';
@@ -142,7 +141,7 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
       setFailureReasons(stored.failureReasons || []);
       setChallenges(stored.challenges || []);
       setUnlockedTimestamps(stored.unlockedTimestamps || {});
-      setFeaturedAchievementIds(stored.featuredAchievementIds || ['first_step', 'starter_streak', 'consistency_master']);
+      setFeaturedAchievementIds(stored.featuredAchievementIds || []);
       setMonthlyReflections(stored.monthlyReflections || {});
       setDismissedInsightIds(stored.dismissedInsightIds || []);
 
@@ -622,13 +621,9 @@ export function HabitProvider({ children }: { children: React.ReactNode }) {
     setIsStorageCorrupted(false);
   }, []);
 
-  // Reset to sample data
+  // Reset to sample data (kept for interface compatibility)
   const resetToSampleData = useCallback(() => {
     sounds.playComplete();
-    const samples = getSampleHabits();
-    setHabits(samples);
-    setFailureReasons([]);
-    setSelectedHabit(null);
   }, []);
 
   // Notifications

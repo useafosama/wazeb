@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Plus, BarChart3 } from 'lucide-react';
 import AppContainer from '@/components/layout/AppContainer';
 import MetricCards from '@/components/stats/MetricCards';
 import DayScoreTrendChart from '@/components/stats/DayScoreTrendChart';
@@ -12,13 +13,19 @@ import ChickWeeklyCard from '@/components/chick/ChickWeeklyCard';
 import AchievementsStatsCard from '@/components/achievements/AchievementsStatsCard';
 import MonthlyReflectionCard from '@/components/reflections/MonthlyReflectionCard';
 import { useHabits } from '@/context/HabitContext';
+import { sounds } from '@/utils/sound';
 
 export default function StatsPage() {
-  const { settings, recordStatsVisited } = useHabits();
+  const { habits, settings, recordStatsVisited, setIsAddModalOpen } = useHabits();
 
   React.useEffect(() => {
     recordStatsVisited();
   }, [recordStatsVisited]);
+
+  const handleOpenAdd = () => {
+    sounds.playTick();
+    setIsAddModalOpen(true);
+  };
 
   return (
     <AppContainer showSummaryPanel={false}>
@@ -33,36 +40,61 @@ export default function StatsPage() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-6 pb-16">
-        {/* Monthly Reflection Review Card */}
-        <MonthlyReflectionCard />
+      {habits.length === 0 ? (
+        <div className="w-full flex flex-col items-center justify-center text-center py-20 px-6 bg-card border border-border rounded-3xl gap-5 shadow-soft my-4">
+          <div className="w-20 h-20 rounded-3xl bg-accent flex items-center justify-center text-4xl shadow-inner">
+            📊
+          </div>
+          
+          <div className="flex flex-col gap-1.5 max-w-sm">
+            <h3 className="text-2xl font-black text-foreground tracking-tight">
+              إحصائياتك هتظهر هنا 📊
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              ابدأ عادة واحدة وشوف تقدمك يومًا بعد يوم.
+            </p>
+          </div>
 
-        {/* Achievements Cabinet Summary */}
-        <AchievementsStatsCard />
+          <button
+            onClick={handleOpenAdd}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-extrabold py-3.5 px-8 rounded-2xl flex items-center justify-center gap-2 transition-all active:scale-95 shadow-soft mt-1"
+          >
+            <Plus className="w-5 h-5 stroke-[2.5]" />
+            <span>+ أضف أول عادة</span>
+          </button>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-6 pb-16">
+          {/* Monthly Reflection Review Card */}
+          <MonthlyReflectionCard />
 
-        {/* Chick Mode Exclusive Cards */}
-        {settings.isChickMode && (
-          <>
-            <ChickAchievementsCard />
-            <ChickWeeklyCard />
-          </>
-        )}
+          {/* Achievements Cabinet Summary */}
+          <AchievementsStatsCard />
 
-        {/* Key Metrics Row */}
-        <MetricCards />
+          {/* Chick Mode Exclusive Cards */}
+          {settings.isChickMode && (
+            <>
+              <ChickAchievementsCard />
+              <ChickWeeklyCard />
+            </>
+          )}
 
-        {/* Day Score 7-Day Trend Chart */}
-        <DayScoreTrendChart />
+          {/* Key Metrics Row */}
+          <MetricCards />
 
-        {/* Weekly Activity and Habit Breakdown */}
-        <ActivityCharts />
+          {/* Day Score 7-Day Trend Chart */}
+          <DayScoreTrendChart />
 
-        {/* Failure Insights & Suggestions ("ليه وقعت؟") */}
-        <InsightsSection />
+          {/* Weekly Activity and Habit Breakdown */}
+          <ActivityCharts />
 
-        {/* Challenges & Badges List */}
-        <ChallengesList />
-      </div>
+          {/* Failure Insights & Suggestions ("ليه وقعت؟") */}
+          <InsightsSection />
+
+          {/* Challenges & Badges List */}
+          <ChallengesList />
+        </div>
+      )}
     </AppContainer>
   );
 }

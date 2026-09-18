@@ -4,7 +4,6 @@
  */
 
 import { Habit, UserSettings, FailureReasonEntry, Challenge, MonthlyReflectionSnapshot } from '@/types/habit';
-import { getSampleHabits } from './sample-data';
 
 export const WAZEB_DATA_VERSION = 1;
 
@@ -64,12 +63,12 @@ export function getDefaultState(): WazebStoredState {
   return {
     version: WAZEB_DATA_VERSION,
     updatedAt: new Date().toISOString(),
-    habits: getSampleHabits(),
+    habits: [],
     settings: { ...DEFAULT_SETTINGS },
     failureReasons: [],
     challenges: [],
     unlockedTimestamps: {},
-    featuredAchievementIds: ['first_step', 'starter_streak', 'consistency_master'],
+    featuredAchievementIds: [],
     monthlyReflections: {},
     dismissedInsightIds: [],
   };
@@ -139,7 +138,7 @@ class LocalWazebStorage implements StorageAdapter {
 
       const featuredAchievementIds = localStorage.getItem(STORAGE_KEYS.LEGACY_FEATURED)
         ? JSON.parse(localStorage.getItem(STORAGE_KEYS.LEGACY_FEATURED)!)
-        : ['first_step', 'starter_streak', 'consistency_master'];
+        : [];
 
       const monthlyReflections = localStorage.getItem(STORAGE_KEYS.LEGACY_REFLECTIONS)
         ? JSON.parse(localStorage.getItem(STORAGE_KEYS.LEGACY_REFLECTIONS)!)
@@ -201,7 +200,7 @@ class LocalWazebStorage implements StorageAdapter {
           failureReasons: parsed.failureReasons || [],
           challenges: parsed.challenges || [],
           unlockedTimestamps: parsed.unlockedTimestamps || {},
-          featuredAchievementIds: parsed.featuredAchievementIds || ['first_step', 'starter_streak', 'consistency_master'],
+          featuredAchievementIds: parsed.featuredAchievementIds || [],
           monthlyReflections: parsed.monthlyReflections || {},
           dismissedInsightIds: parsed.dismissedInsightIds || [],
         };
@@ -340,7 +339,7 @@ class LocalWazebStorage implements StorageAdapter {
         failureReasons: (targetState as WazebStoredState).failureReasons || [],
         challenges: (targetState as WazebStoredState).challenges || [],
         unlockedTimestamps: (targetState as WazebStoredState).unlockedTimestamps || {},
-        featuredAchievementIds: (targetState as WazebStoredState).featuredAchievementIds || ['first_step', 'starter_streak', 'consistency_master'],
+        featuredAchievementIds: (targetState as WazebStoredState).featuredAchievementIds || [],
         monthlyReflections: (targetState as WazebStoredState).monthlyReflections || {},
         dismissedInsightIds: (targetState as WazebStoredState).dismissedInsightIds || [],
       };
@@ -367,7 +366,7 @@ class LocalWazebStorage implements StorageAdapter {
       failureReasons: [],
       challenges: [],
       unlockedTimestamps: {},
-      featuredAchievementIds: ['first_step', 'starter_streak', 'consistency_master'],
+      featuredAchievementIds: [],
       monthlyReflections: {},
       dismissedInsightIds: [],
     };

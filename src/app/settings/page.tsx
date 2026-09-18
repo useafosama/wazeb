@@ -48,7 +48,6 @@ export default function SettingsPage() {
     hasLocalBackup,
     restoreLocalBackup,
     resetAllData,
-    resetToSampleData,
   } = useHabits();
 
   const {
@@ -138,11 +137,6 @@ export default function SettingsPage() {
     resetAllData();
     setShowResetConfirm(false);
     showStatus('تم مسح جميع البيانات بنجاح');
-  };
-
-  const handleRestoreSamples = () => {
-    resetToSampleData();
-    showStatus('تمت استعادة العادات النموذجية ✨');
   };
 
   const notifs = settings.notificationSettings || {
@@ -523,17 +517,6 @@ export default function SettingsPage() {
               </button>
             )}
 
-            {/* Restore Sample Data */}
-            <button
-              onClick={handleRestoreSamples}
-              className="w-full p-3.5 bg-secondary hover:bg-muted border border-border rounded-2xl flex items-center justify-between text-xs font-bold text-foreground transition-all active:scale-[0.99]"
-            >
-              <div className="flex items-center gap-2.5">
-                <Sparkles className="w-4 h-4 text-warning" />
-                <span>استعادة العادات النموذجية والتحديات</span>
-              </div>
-              <span className="text-[11px] text-muted-foreground">إعادة تهيئة</span>
-            </button>
 
             {/* Reset All Data */}
             {!showResetConfirm ? (
