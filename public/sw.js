@@ -3,7 +3,7 @@
  * Provides reliable offline capability and fast asset caching
  */
 
-const CACHE_NAME = 'wazeb-cache-v1.2';
+const CACHE_NAME = 'wazeb-cache-v1.3';
 const STATIC_ASSETS = [
   '/',
   '/stats',
