@@ -1,0 +1,36 @@
+name: Wazeb CI / Build Verification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & Verify Wazeb
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Static Export
+        run: npm run build
+
+      - name: Verify Output Directory
+        run: |
+          test -d out
+          test -f out/index.html
+          test -f out/manifest.json
+          test -f out/sw.js
+          echo "✅ Build verified successfully!"
