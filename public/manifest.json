@@ -1,0 +1,63 @@
+{
+  "name": "واظب",
+  "short_name": "Wazeb",
+  "description": "واظب على عاداتك، يومًا بعد يوم.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D0D0D",
+  "theme_color": "#0D0D0D",
+  "orientation": "portrait-primary",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["lifestyle", "productivity", "health"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "إنجاز سريع",
+      "short_name": "إنجاز",
+      "description": "تسجيل إنجاز عادات اليوم فوراً",
+      "url": "/?action=quick-complete",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "عادات اليوم",
+      "short_name": "الرئيسية",
+      "description": "فتح قائمة عادات اليوم",
+      "url": "/",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "الإحصائيات والدرجة",
+      "short_name": "الإحصائيات",
+      "description": "معاينة درجة يومك والتحديات",
+      "url": "/stats",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "المراجعة الشهرية",
+      "short_name": "المراجعة",
+      "description": "تأمل ومراجعة الشهر",
+      "url": "/reflections",
+      "icons": [{ "src": "/icon.svg", "sizes": "any" }]
+    }
+  ]
+}
